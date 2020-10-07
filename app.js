@@ -1,4 +1,5 @@
 const path = require('path');
+const PORT = process.env.PORT || 3000;
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -21,6 +22,6 @@ app.use(companies);
 
 mongoose.connect(mongoURI)
 .then(result => {
-    app.listen(3000),console.log('i am listening at 3000');
+    app.listen(PORT),console.log('i am listening at 3000');
 })
 .catch(err => console.log(err));
