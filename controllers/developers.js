@@ -6,8 +6,8 @@ const nodemailer = require('nodemailer');
 const transport = nodemailer.createTransport({
     service: 'gmail.com',
     auth: {
-      user: 'harshpachauri3001@gmail.com',
-      pass: 'Mnnitcse100@'  
+      user: 'dummypac3001@gmail.com',
+      pass: 'Dummypac100@'  
     }
 });
 
@@ -41,7 +41,7 @@ exports.postSignUp = (req,res,next) => {
         .then(result => {
           res.redirect('/dev/loginSignUp');
           var mailOptions = {
-            from: 'harshpachauri3001@gmail.com',
+            from: 'dummypac3001@gmail.com',
             to: email,
             subject:'Signed Up successfully ',
             text: `Congratulations ! ${username}... Your Developer account ${email} has been successfully registered with our app`
