@@ -8,8 +8,8 @@ const nodemailer = require('nodemailer');
 const transport = nodemailer.createTransport({
     service: 'gmail.com',
     auth: {
-      user: 'harshpachauri3001@gmail.com',
-      pass: 'Mnnitcse100@'  
+      user: 'dummypac@gmail.com',
+      pass: 'Dummypac100@'  
     }
 });
 
@@ -27,7 +27,7 @@ exports.postSignUp = (req,res,next) => {
 
     Comp.findOne({email: email})
     .then(userDoc => {
-        if(userDoc) return res.redirect('/comp/SignUp');
+        if(userDoc) return res.redirect('/comp/loginSignUp');
         return bcrypt.hash(password,12)
         .then(hashedPassword => {
             const comp = new Comp({
@@ -42,7 +42,7 @@ exports.postSignUp = (req,res,next) => {
           
              
             var mailOptions = {
-              from: 'harshpachauri3001@gmail.com',
+              from: 'dummypac3001@gmail.com',
               to: email,
               subject:'Signed Up successfully ',
               text: `Congratulations ! ${username}... Your Company account ${email} has been successfully registered with our app`
