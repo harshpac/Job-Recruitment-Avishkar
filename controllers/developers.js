@@ -6,10 +6,11 @@ const nodemailer = require('nodemailer');
 const transport = nodemailer.createTransport({
     service: 'gmail.com',
     auth: {
-      user: 'harsh',
-      pass: ''  
+      user: 'harshpachauri3001@gmail.com',
+      pass: 'Mnnitcse100@'  
     }
 });
+
 
 
 exports.getDevPage = (req,res,next) => {
@@ -32,24 +33,25 @@ exports.postSignUp = (req,res,next) => {
                 username: username,
                 email: email,
                 password: hashedPassword
-            })
+            });
+            
+          
             return dev.save();
         })
         .then(result => {
-          
-const mailOptions = {
-  from: 'harshpachauri3001@gmail.com',
-to:'harshpachauri3001@gmail.com',
-subject:'successfully signed up ',
-text: 'your account has been created successfully'
-};
-
-transport.sendMail(mailOptions, (err,info) => {
-  if(err) console.log(err);
-  else console.log('email sent ' + info.response);
-});
-            res.redirect('/dev/loginSignUp');
-          });
+          res.redirect('/dev/loginSignUp');
+          var mailOptions = {
+            from: 'harshpachauri3001@gmail.com',
+            to: email,
+            subject:'Signed Up successfully ',
+            text: `Congratulations ! ${username}... Your Developer account ${email} has been successfully registered with our app`
+   };
+         return transport.sendMail(mailOptions, (err,info) => {
+         if(err) console.log(err);
+         else console.log('email sent ' + info.response);
+         });
+           
+          }).catch(err => console.log(err));
     })
     .catch(err => console.log(err));
 };

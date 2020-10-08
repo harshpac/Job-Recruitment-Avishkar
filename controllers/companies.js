@@ -2,6 +2,18 @@ const Comp = require('../models/comp');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
+
+const nodemailer = require('nodemailer');
+
+const transport = nodemailer.createTransport({
+    service: 'gmail.com',
+    auth: {
+      user: 'harshpachauri3001@gmail.com',
+      pass: 'Mnnitcse100@'  
+    }
+});
+
+
 exports.getCompPage = (req,res,next) => {
     res.render('comp');
 };
@@ -27,7 +39,21 @@ exports.postSignUp = (req,res,next) => {
         })
         .then(result => {
             res.redirect('/comp/loginSignUp');
-          });
+          
+             
+            var mailOptions = {
+              from: 'harshpachauri3001@gmail.com',
+              to: email,
+              subject:'Signed Up successfully ',
+              text: `Congratulations ! ${username}... Your Company account ${email} has been successfully registered with our app`
+               };
+           return transport.sendMail(mailOptions, (err,info) => {
+           if(err) console.log(err);
+           else console.log('email sent ' + info.response);
+           });
+             
+            }).catch(err => console.log(err));
+
     })
     .catch(err => console.log(err));
 };
