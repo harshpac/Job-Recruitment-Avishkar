@@ -1,6 +1,15 @@
 const Dev = require('../models/dev');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+const transport = nodemailer.createTransport({
+    service: 'gmail.com',
+    auth: {
+      user: 'harsh',
+      pass: ''  
+    }
+});
 
 
 exports.getDevPage = (req,res,next) => {
@@ -16,7 +25,7 @@ exports.postSignUp = (req,res,next) => {
 
     Dev.findOne({email: email})
     .then(userDoc => {
-        if(userDoc) return res.redirect('/dev/SignUp');
+        if(userDoc) return res.redirect('/dev/loginSignUp');
         return bcrypt.hash(password,12)
         .then(hashedPassword => {
             const dev = new Dev({
@@ -27,6 +36,18 @@ exports.postSignUp = (req,res,next) => {
             return dev.save();
         })
         .then(result => {
+          
+const mailOptions = {
+  from: 'harshpachauri3001@gmail.com',
+to:'harshpachauri3001@gmail.com',
+subject:'successfully signed up ',
+text: 'your account has been created successfully'
+};
+
+transport.sendMail(mailOptions, (err,info) => {
+  if(err) console.log(err);
+  else console.log('email sent ' + info.response);
+});
             res.redirect('/dev/loginSignUp');
           });
     })
