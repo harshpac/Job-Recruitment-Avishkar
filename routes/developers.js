@@ -10,4 +10,6 @@ router.post('/dev/login', control.postLogin);
 
 router.post('/dev/SignUp', control.postSignUp);
 
+router.get('/dev/main/:id', control.getDevMain);
+
 module.exports = router;

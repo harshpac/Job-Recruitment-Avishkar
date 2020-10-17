@@ -21,19 +21,21 @@ exports.getCompPage = (req,res,next) => {
 
 exports.postSignUp = (req,res,next) => {
     const username = req.body.username;
-    const email = req.body.email;
     const password = req.body.password;
+    const description = req.body.description;
+    const tagline = req.body.tagline;
     const confirmPassword = req.body.confirmPassword
 
-    Comp.findOne({email: email})
+    Comp.findOne({username: username})
     .then(userDoc => {
         if(userDoc) return res.redirect('/comp/loginSignUp');
         return bcrypt.hash(password,12)
         .then(hashedPassword => {
             const comp = new Comp({
                 username: username,
-                email: email,
-                password: hashedPassword
+                description: description,
+                password: hashedPassword,
+                tagline: tagline
             })
             return comp.save();
         })
@@ -43,9 +45,9 @@ exports.postSignUp = (req,res,next) => {
              
             var mailOptions = {
               from: 'dummypac3001@gmail.com',
-              to: email,
+              to: 'dummypac3001@gmail.com',
               subject:'Signed Up successfully ',
-              text: `Congratulations ! ${username}... Your Company account ${email} has been successfully registered with our app`
+              text: `Congratulations ! ... Your Company account with name ${username} has been successfully registered with our app`
                };
            return transport.sendMail(mailOptions, (err,info) => {
            if(err) console.log(err);
@@ -61,15 +63,15 @@ exports.postSignUp = (req,res,next) => {
 
 
 exports.postLogin = (req,res,next) => {
-    const email = req.body.email;
+    const name = req.body.username;
     const password = req.body.password;
     
    
-    Comp.findOne({email: email})
+    Comp.findOne({username: name})
     .then(user => {
       if(!user){
         req.flash('error','Invalid email or Password');
-        return res.redirect('/comp/login');
+        return res.redirect('/comp/loginSignUp');
       }
 
       bcrypt.compare(password,user.password)
@@ -80,15 +82,20 @@ exports.postLogin = (req,res,next) => {
             // req.session.user = user;
             // return req.session.save(err => {
             //   console.log(err);
-            //   res.redirect('/');
+               res.redirect('/comp/main');
             // })
           }
           res.redirect('/comp/login');
       })
       .catch(err => {
         console.log(err);
-        res.redirect('/comp/login');
+        res.redirect('/comp/loginSignUp');
       });
     })
     .catch(err => console.log(err));
 };
+
+exports.getCompMain = (req,res,next) => {
+  res.render('company/main');
+}
+ 

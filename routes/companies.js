@@ -10,4 +10,6 @@ router.post('/comp/login', control.postLogin);
 
 router.post('/comp/SignUp', control.postSignUp);
 
+router.get('/comp/main', control.getCompMain);
+
 module.exports = router;

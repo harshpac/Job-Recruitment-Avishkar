@@ -1,4 +1,5 @@
 const Dev = require('../models/dev');
+const Comp = require('../models/comp');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
@@ -60,15 +61,15 @@ exports.postSignUp = (req,res,next) => {
 exports.postLogin = (req,res,next) => {
     const email = req.body.email;
     const password = req.body.password;
-    
+    let id;
    
     Dev.findOne({email: email})
     .then(user => {
       if(!user){
         req.flash('error','Invalid email or Password');
-        return res.redirect('/dev/login');
+        return res.redirect('/dev/loginSignUp');
       }
-
+      id = user._id;
       bcrypt.compare(password,user.password)
       .then(match => {
           if(match){
@@ -79,13 +80,34 @@ exports.postLogin = (req,res,next) => {
             //   console.log(err);
             //   res.redirect('/');
             // })
+            return res.redirect(`/dev/main/${id}`);
           }
-          res.redirect('/dev/login');
+          res.redirect('/dev/loginSignUp');
       })
       .catch(err => {
         console.log(err);
-        res.redirect('/dev/login');
+        res.redirect('/dev/loginSignUp');
       });
     })
     .catch(err => console.log(err));
+};
+
+
+
+exports.getDevMain = (req,res,next) => {
+  const id = req.params.id;
+  let name;
+  Dev.findById({_id: id}).then(user => {
+    if(!user) return res.redirect('/dev/loginSignUp');
+    name = user.username;
+  })
+  .then(result => {
+     Comp.find().then(comps => {
+      res.render('developer/main',{
+        companies: comps,
+        name: name
+        });
+     })
+  })
+  .catch(err => console.log(err));
 };
